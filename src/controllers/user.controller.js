@@ -23,7 +23,11 @@ export const register = asyncHandler(async (req, res, next) => {
   }
 
   const avatarPath = req.files?.avatar[0]?.path;
-  const coverImagePath = req.files?.coverImage[0]?.path;
+  let coverImagePath;
+
+  if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+    coverImagePath = req.files.coverImage[0].path
+  }
 
   if (!avatarPath) {
     throw new ApiError(400, "Avatar Image is required");
