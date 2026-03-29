@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { changeCurrentPassword, getCurrentUser, login, logOut, refreshAccessToken, register, updateAccountDetails } from "../controllers/user.controller.js";
+import { changeCurrentPassword, getCurrentUser, login, logOut, refreshAccessToken, register, updateAccountDetails, updateUserCoverImage } from "../controllers/user.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 import { isAuth } from "../middleware/auth.middleware.js";
 
@@ -27,5 +27,13 @@ router.post("/change-password", isAuth, changeCurrentPassword)
 router.get("/curr-user", isAuth, getCurrentUser)
 
 router.post("/update-profile", isAuth, updateAccountDetails)
+
+router.post(
+  "/cover-image-update",
+  isAuth,
+  upload.single("coverImage"),
+  updateUserCoverImage
+);
+
 
 export default router;
