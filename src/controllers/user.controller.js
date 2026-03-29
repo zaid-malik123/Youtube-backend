@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import User from "../models/user.model.js";
 import { uploadOnCloudinary } from "../config/cloudinary.js";
+import jwt from "jsonwebtoken"
 
 const generateAccessAndRefreshTokens = async (id) => {
 
@@ -156,4 +157,46 @@ export const logOut = asyncHandler ( async (req, res) => {
   
 
 
+})
+
+export const refreshAccessToken = asyncHandler( async (req, res) => {
+
+    const incomingRefreshToken = req.cookies.refreshToken;
+
+    if(!incomingRefreshToken) {
+      throw new ApiError(401, "User is not authenticated")
+    }
+
+    try {
+      const decoded = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
+  
+      const user = await User.findById(decoded._id);
+  
+      if(!user) {
+        throw new ApiError(401, "user is not found")
+      }
+  
+      if(incomingRefreshToken != user.refreshToken) {
+        throw new ApiError(401, "refresh token is not valid")
+      }
+  
+      const options = {
+        httpOnly: true,
+        secure: true
+      }
+  
+      const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id)
+  
+      return res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(new ApiResponse(200, 
+              {refreshToken, accessToken},
+              "access token refreshed"
+            ))
+    } catch (error) {
+        console.log(error)
+        throw new ApiError(500, error)
+    }
 })
