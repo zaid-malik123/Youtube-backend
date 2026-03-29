@@ -35,5 +35,12 @@ router.post(
   updateUserCoverImage
 );
 
+router.post(
+  "/avatar-image-update",
+  isAuth,
+  upload.single("avatarImage"),
+  updateUserCoverImage
+);
+
 
 export default router;
