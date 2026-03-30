@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { changeCurrentPassword, getCurrentUser, login, logOut, refreshAccessToken, register, updateAccountDetails, updateUserCoverImage } from "../controllers/user.controller.js";
+import { changeCurrentPassword, getCurrentUser, getUserChannelProfile, login, logOut, refreshAccessToken, register, updateAccountDetails, updateUserCoverImage } from "../controllers/user.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 import { isAuth } from "../middleware/auth.middleware.js";
 
@@ -41,6 +41,8 @@ router.post(
   upload.single("avatarImage"),
   updateUserCoverImage
 );
+
+router.get("/channel-profile/:userName", isAuth, getUserChannelProfile)
 
 
 export default router;
