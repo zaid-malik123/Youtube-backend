@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { changeCurrentPassword, getCurrentUser, getUserChannelProfile, login, logOut, refreshAccessToken, register, updateAccountDetails, updateUserCoverImage } from "../controllers/user.controller.js";
+import { changeCurrentPassword, getCurrentUser, getUserChannelProfile, getUserWatchHistory, login, logOut, refreshAccessToken, register, updateAccountDetails, updateUserCoverImage } from "../controllers/user.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 import { isAuth } from "../middleware/auth.middleware.js";
 
@@ -43,6 +43,8 @@ router.post(
 );
 
 router.get("/channel-profile/:userName", isAuth, getUserChannelProfile)
+
+router.get("/user-watch-history", isAuth, getUserWatchHistory)
 
 
 export default router;
